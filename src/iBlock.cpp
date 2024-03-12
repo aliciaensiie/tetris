@@ -17,6 +17,7 @@ std::vector<sf::RectangleShape> IBlock::createShape(std::vector<sf::RectangleSha
 IBlock::IBlock(): Shape(){
     sf::Color color=colorShape();
     vector_square = createShape(vector_square, color);
+    
 }
 
 void IBlock::turn(std::vector<std::vector<int>> completed_square){

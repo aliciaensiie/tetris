@@ -8,7 +8,7 @@
 #define NUMBER_SQUARE_LENGTH LENGTH_TETRIS/SIZE_SQUARE
 #define NUMBER_SQUARE_HEIGHT HEIGHT_TETRIS/SIZE_SQUARE
 
-enum class State{in_movement, stopped};
+enum class State{in_movement, stopped, pending};
 
 class Shape : public sf::Drawable{
     protected: 
@@ -16,22 +16,34 @@ class Shape : public sf::Drawable{
        int way;
        State state;
 
-       int random(int number);
-       sf::Color colorShape();
+       int random(int number) const;
+       sf::Color colorShape() const;
        virtual std::vector<sf::RectangleShape> createShape(std::vector<sf::RectangleShape> vector_shape, sf::Color color)=0;
-       virtual void turn(std::vector<std::vector<int>> completed_square)=0;
-       bool isCollision(std::vector<std::vector<int>> completed_square);
-       bool isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_line);
+       
+
+       bool isCollision(std::vector<std::vector<int>> completed_square) const;
+       bool isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_line) const;
 
     public: 
         Shape();
+
+        virtual void turn(std::vector<std::vector<int>> completed_square)=0;
+        
+        std::vector<sf::RectangleShape> getVectorSquare() const;
+        sf::Vector2f getPositionSquare(sf::RectangleShape rect) const;
+        State getState() const;
+        void setState(State new_state);
+        void setColorTransparent();
+
         void goDown(std::vector<std::vector<int>> completed_square);
         void goRight(std::vector<std::vector<int>> completed_square);
         void goLeft(std::vector<std::vector<int>> completed_square);
+
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        State getState();
-        std::vector<sf::RectangleShape> getVectorSquare();
-        sf::Vector2f getPositionSquare(sf::RectangleShape rect);
+        
+        
+        
+        
         
 
 };

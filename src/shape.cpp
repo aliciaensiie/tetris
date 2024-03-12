@@ -11,14 +11,13 @@ std::default_random_engine createRandomEngine1(){
 
 std::default_random_engine RandomEngine1=createRandomEngine1();
 
-int Shape::random(int number){
+int Shape::random(int number) const{
     std::uniform_int_distribution<> distr(1, number);
     return distr(RandomEngine1);
 }
 
-sf::Color Shape::colorShape(){
+sf::Color Shape::colorShape()const{
     int number=random(5);
-    //std::cout << "number = " << number << std::endl;
     switch (number){
         case 1: 
             return sf::Color::Red;
@@ -34,7 +33,7 @@ sf::Color Shape::colorShape(){
     return sf::Color::Black;
 }
 
-bool Shape::isCollision(std::vector<std::vector<int>> completed_square){
+bool Shape::isCollision(std::vector<std::vector<int>> completed_square) const{
     for (sf::RectangleShape rect : vector_square){
         if (completed_square[getPositionSquare(rect).x][getPositionSquare(rect).y+1] == 1){
             return true;
@@ -43,7 +42,7 @@ bool Shape::isCollision(std::vector<std::vector<int>> completed_square){
     return false;
 }
 
-bool Shape::isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_line){
+bool Shape::isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_line) const{
     for (int line : complete_line){
         if (getPositionSquare(rect).y==line){
             return true;
@@ -52,24 +51,43 @@ bool Shape::isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_
     return false;
 }
 
+
 //PUBLIC
 Shape::Shape(): vector_square(), way(0), state(State::in_movement){}
 
+std::vector<sf::RectangleShape> Shape::getVectorSquare()const{
+    return vector_square;
+}
+
+sf::Vector2f Shape::getPositionSquare(sf::RectangleShape rect) const{
+    return sf::Vector2f(rect.getPosition().x/SIZE_SQUARE, rect.getPosition().y/SIZE_SQUARE);
+}
+
+State Shape::getState() const{
+    return state;
+}
+
+void Shape::setState(State new_state){
+    state= new_state;
+}
+
+void Shape::setColorTransparent(){
+    for (sf::RectangleShape& element : vector_square){
+        element.setFillColor(sf::Color::Transparent);
+    }
+}
 void Shape::goDown(std::vector<std::vector<int>> completed_square){
     for(sf::RectangleShape& square : vector_square){
         square.setPosition(square.getPosition() + sf::Vector2f(0,SIZE_SQUARE));
-        //std::cout << "position x= " << square.getPosition().x << ", position y= " << square.getPosition().y << std::endl;
     }
     if (isCollision(completed_square) ){
-        //std::cout << "colllision" << std::endl;
-        state=State::stopped;
+        state=State::pending;
     }
     for (sf::RectangleShape square : vector_square){
         if (square.getPosition().y<0 || square.getPosition().y > HEIGHT_TETRIS-2*SIZE_SQUARE){
-            state=State::stopped;
+            state=State::pending;
         }
-    }
-    
+    } 
 }
 
 void Shape::goRight(std::vector<std::vector<int>> completed_square){
@@ -97,17 +115,3 @@ void Shape::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
     
 }
-
-State Shape::getState(){
-    return state;
-}
-
-std::vector<sf::RectangleShape> Shape::getVectorSquare(){
-    return vector_square;
-}
-
-
-sf::Vector2f Shape::getPositionSquare(sf::RectangleShape rect){
-    return sf::Vector2f(rect.getPosition().x/SIZE_SQUARE, rect.getPosition().y/SIZE_SQUARE);
-}
-
