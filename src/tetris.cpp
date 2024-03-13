@@ -11,7 +11,7 @@ std::default_random_engine createRandomEngine2(){
 
 std::default_random_engine RandomEngine2=createRandomEngine2();
 
-Type_Shape Tetris::whichTypeShape(){
+Type_Shape Tetris::randomTypeShape(){
     std::uniform_int_distribution<> distr(0, NUMBER_ELEMENT_TYPE_SHAPE-1);
     int number =distr(RandomEngine2);
     return static_cast<Type_Shape>(number);
@@ -19,172 +19,149 @@ Type_Shape Tetris::whichTypeShape(){
 
 
 void Tetris::addShape(){
-    Type_Shape type=whichTypeShape();
+    type_next_shape=randomTypeShape();
     int middle_square = NUMBER_SQUARE_LENGTH /2;
-    switch (type){
+    switch (type_next_shape){
         case Type_Shape::I :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square][2] == 0 && completed_square[middle_square][3]==0){
-                IBlock new_iblock;
-                iblock=new_iblock;
+                IBlock* new_iblock= new IBlock();
+                nextshape=static_cast<Shape*>(new_iblock);
                 if (completed_square[middle_square][4]==1){
-                    iblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         } 
         case Type_Shape::O:{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square+1][0] == 0 && completed_square[middle_square+1][1]==0){
-                OBlock new_oblock;
-                oblock=new_oblock;
+                OBlock* new_oblock = new OBlock();
+                nextshape=static_cast<Shape*>(new_oblock);
                 if (completed_square[middle_square][2]==1 || completed_square[middle_square +1][2]==1){
-                    oblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
         case Type_Shape::L :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square][2] == 0 && completed_square[middle_square+1][2]==0){
-                LBlock new_lblock;
-                lblock=new_lblock;
+                LBlock* new_lblock= new LBlock();
+                nextshape=static_cast<Shape*>(new_lblock);
                 if (completed_square[middle_square][3]==1 || completed_square[middle_square +1][3]==1){
-                    oblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
         case Type_Shape::J :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square][2] == 0 && completed_square[middle_square-1][2]==0){
-                JBlock new_jblock;
-                jblock=new_jblock;
+                JBlock* new_jblock = new JBlock();
+                nextshape=static_cast<Shape*>(new_jblock);
                 if (completed_square[middle_square][3]==1 || completed_square[middle_square -1][3]==1){
-                    jblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
         case Type_Shape::T :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square-1][0] == 0 && completed_square[middle_square+1][0]==0){
-                TBlock new_tblock;
-                tblock=new_tblock;
+                TBlock* new_tblock = new TBlock();
+                nextshape=static_cast<Shape*>(new_tblock);
                 if (completed_square[middle_square][2]==1 || completed_square[middle_square -1][1]==1 || completed_square[middle_square +1][1]==1){
-                    tblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
         case Type_Shape::S :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square+1][0] == 0 && completed_square[middle_square-1][1]==0){
-                SBlock new_sblock;
-                sblock=new_sblock;
+                SBlock* new_sblock = new SBlock();
+                nextshape=static_cast<Shape*>(new_sblock);
                 if (completed_square[middle_square][2]==1 || completed_square[middle_square -1][2]==1 || completed_square[middle_square +1][1]==1){
-                    sblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
         case Type_Shape::Z :{
             if (completed_square[middle_square][0] == 0 && completed_square[middle_square][1] == 0 && completed_square[middle_square-1][0] == 0 && completed_square[middle_square+1][1]==0){
-                ZBlock new_zblock;
-                zblock=new_zblock;
+                ZBlock* new_zblock= new ZBlock();
+                nextshape=static_cast<Shape*>(new_zblock);
                 if (completed_square[middle_square][2]==1 || completed_square[middle_square +1][2]==1 || completed_square[middle_square -1][1]==1){
-                    zblock.setState(State::stopped);
+                    nextshape->setState(State::stopped);
                 }
             }  
             break; 
         }
-    }
+    }       
+}
 
-            
+void Tetris::addTextures(){
+    sf::Texture texture_I;
+    texture_I.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/i.png");
+    vector_texture.push_back(texture_I);
+
+    sf::Texture texture_O;
+    texture_O.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/o.png");
+    vector_texture.push_back(texture_O);
+
+    sf::Texture texture_L;
+    texture_L.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/l.png");
+    vector_texture.push_back(texture_L);
+
+    sf::Texture texture_J;
+    texture_J.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/j.png");
+    vector_texture.push_back(texture_J);
+    
+    sf::Texture texture_T;
+    texture_T.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/t.png");
+    vector_texture.push_back(texture_T);
+
+    sf::Texture texture_S;
+    texture_S.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/s.png");
+    vector_texture.push_back(texture_S);
+
+    sf::Texture texture_Z;
+    texture_Z.loadFromFile(std::string(PATH_RESSOURCES) + "/textures/z.png");
+    vector_texture.push_back(texture_Z);
 }
 
 void Tetris::addBlockToCompletedSquare(Shape* shape){
     for(sf::RectangleShape element: shape->getVectorSquare() ){
         sf::Vector2f pos= shape->getPositionSquare(element);
         completed_square[pos.x][pos.y] = 1;
-        square_grill[pos.x][pos.y] = element;
-    }
-}
- 
-//HERE
-void Tetris::addFirstShapes(){
-    Type_Shape type=whichTypeShape();
-    
-    if(type != Type_Shape::I){
-        iblock.setState(State::stopped);
-        iblock.setColorTransparent();
-    }
-    if(type != Type_Shape::O){
-        oblock.setState(State::stopped);
-        oblock.setColorTransparent();
-    }
-    if(type != Type_Shape::L){
-        lblock.setState(State::stopped);
-        lblock.setColorTransparent();
-    }
-    if(type != Type_Shape::J){
-        jblock.setState(State::stopped);
-        jblock.setColorTransparent();
-    }
-    if(type != Type_Shape::T){
-        tblock.setState(State::stopped);
-        tblock.setColorTransparent();
-    }
-    if(type != Type_Shape::S){
-        sblock.setState(State::stopped);
-        sblock.setColorTransparent();
-    }
-    if(type != Type_Shape::Z){
-        zblock.setState(State::stopped);
-        zblock.setColorTransparent();
+        square_grid[pos.x][pos.y] = element;
     }
 }
 
 //PUBLIC
 
 //HERE
-Tetris::Tetris():iblock(), oblock(), lblock(), jblock(), tblock(), sblock(),zblock(), square_grill(NUMBER_SQUARE_LENGTH, std::vector<sf::RectangleShape>(NUMBER_SQUARE_HEIGHT)), completed_square(NUMBER_SQUARE_LENGTH, std::vector<int>(NUMBER_SQUARE_LENGTH, 0)){
-    addFirstShapes();
+Tetris::Tetris():
+shape(), nextshape(), 
+square_grid(NUMBER_SQUARE_LENGTH, std::vector<sf::RectangleShape>(NUMBER_SQUARE_HEIGHT)), 
+completed_square(NUMBER_SQUARE_LENGTH, std::vector<int>(NUMBER_SQUARE_LENGTH, 0)), 
+type_next_shape(), vector_texture() {
+
+    addShape();
+    shape = nextshape;
+    addShape();
+    addTextures();
     for (int i=0; i< NUMBER_SQUARE_LENGTH; i++){
         for (int j=0; j<NUMBER_SQUARE_HEIGHT; j++){
-            square_grill[i][j].setPosition(sf::Vector2f(i*SIZE_SQUARE, j*SIZE_SQUARE));
-            square_grill[i][j].setFillColor(sf::Color::Transparent);
+            square_grid[i][j].setPosition(sf::Vector2f(i*SIZE_SQUARE, j*SIZE_SQUARE));
+            square_grid[i][j].setFillColor(sf::Color::Transparent);
         }
     }
 }
 
-Shape* Tetris::findShapeInMovement(){
-
-    if (iblock.getState() != State::stopped){
-        return static_cast<Shape*>(&iblock);
-    }
-    else if (oblock.getState() != State::stopped){
-        return static_cast<Shape*>(&oblock);
-    }
-    else if (lblock.getState() != State::stopped){
-        return static_cast<Shape*>(&lblock);
-    }
-    else if (jblock.getState() != State::stopped){
-        return static_cast<Shape*>(&jblock);
-    }
-    else if (tblock.getState() != State::stopped){
-        return static_cast<Shape*>(&tblock);
-    }
-    else if (sblock.getState() != State::stopped){
-        return static_cast<Shape*>(&sblock);
-    }
-    else if (zblock.getState() != State::stopped){
-        return static_cast<Shape*>(&zblock);
-    }
-    return nullptr;
-}
-
 std::vector<int> Tetris::completeLines(){
     std::vector<int> complete_line;
-    for (int i=0; i< NUMBER_SQUARE_LENGTH ; i++){
+    for (int i=0; i< NUMBER_SQUARE_HEIGHT ; i++){
         bool completed=true;
         for (int j=0; j<NUMBER_SQUARE_LENGTH; j++){
             if (completed_square[j][i]==0){
                 completed=false;
+                break;
             }
         }
         if (completed == true){
@@ -194,24 +171,21 @@ std::vector<int> Tetris::completeLines(){
     return complete_line;
 }
 
-void Tetris::removeLines(std::vector<int> complete_line){
+void Tetris::removeLines(std::vector<int> complete_line){ //constructor
    for (int i=0; i< NUMBER_SQUARE_LENGTH ; i++){
         for (int line : complete_line){
             //std::cout << "i=" << i << " line=" << line << std::endl;
             for (int j=line; j>0; j--){
-                square_grill[i][j].setFillColor(square_grill[i][j-1].getFillColor());
+                square_grid[i][j].setFillColor(square_grid[i][j-1].getFillColor());
                 completed_square[i][j]=completed_square[i][j-1];
-                if (line == 18 && j > 13){
-                    //std::cout << " i=" << i << " j=" << j << " coloralpha=" << square_grill[i][j].getFillColor().a << std::endl; 
-                }
             }
-            square_grill[i][0].setFillColor(sf::Color::Transparent);
+            square_grid[i][0].setFillColor(sf::Color::Transparent);
             completed_square[i][0]=0;
         }
     }
 }
 
-void Tetris::changementLines(){
+void Tetris::changeLines(){
     std::vector<int> complete_line = completeLines();
     if (complete_line.size() != 0){
         removeLines(complete_line);
@@ -220,50 +194,39 @@ void Tetris::changementLines(){
 
 
 void Tetris::goRight(){
-    Shape* shape= findShapeInMovement();
-    shape->goRight(completed_square);
-    if (shape->getState() == State::stopped){
-            addBlockToCompletedSquare(shape);
-            addShape();
+    if(isPossibleGoRight()){
+        shape->goRight(completed_square);
     }
 }
 
 
 void Tetris::goLeft(){
-    Shape* shape=findShapeInMovement();
-    shape->goLeft(completed_square);
-    if (shape->getState() == State::stopped){
-        addBlockToCompletedSquare(shape);
-        addShape();
+    if (isPossibleGoLeft()){
+         shape->goLeft(completed_square);
     }
 }
 
 void Tetris::goDown(){
-    Shape* shape=findShapeInMovement();
-    shape->goDown(completed_square);
-    if (shape->getState() == State::stopped){
-        addBlockToCompletedSquare(shape);
-        addShape();
+    if (!isPossibleGoDown()){
+            shape->setState(State::stopped);
+            addBlockToCompletedSquare(shape);
+            shape = nextshape;
+            addShape();
+        }
+    if(isPossibleGoDown()){
+        shape->goDown(completed_square);
     }
 }
 
 void Tetris::turn(){
-    Shape* shape= findShapeInMovement();
-    if (shape->getState() == State::in_movement){
-        shape->turn(completed_square);
-        if (shape->getState() == State::stopped){
-            addBlockToCompletedSquare(shape);
-            addShape();
-        }
-    }
+    shape->turn(completed_square);
 }
 
 
 
 
 bool Tetris::isPossibleGoRight(){
-    Shape* shape = findShapeInMovement();
-    if (shape == 0){
+    if (shape->getState() == State::stopped){
         return false;
     }
     for(sf::RectangleShape square : shape->getVectorSquare()){
@@ -279,8 +242,7 @@ bool Tetris::isPossibleGoRight(){
 
   
 bool Tetris::isPossibleGoLeft(){
-    Shape* shape=findShapeInMovement();
-    if (shape ==0){
+    if (shape->getState() == State::stopped){
         return false;
     }
     for(sf::RectangleShape square : shape->getVectorSquare()){
@@ -295,7 +257,6 @@ bool Tetris::isPossibleGoLeft(){
 }
 
 bool Tetris::isPossibleGoDown(){
-    Shape* shape= findShapeInMovement();
     if (shape->getState() == State::in_movement){
         for(sf::RectangleShape square : shape->getVectorSquare()){
             if (shape->getPositionSquare(square).y>= NUMBER_SQUARE_HEIGHT-1){
@@ -312,58 +273,21 @@ bool Tetris::isPossibleGoDown(){
     }
 }
 
-bool Tetris::DoNeedWaiting(){
-    if (iblock.getState()==State::pending || jblock.getState()==State::pending || lblock.getState()==State::pending || oblock.getState()==State::pending || sblock.getState()==State::pending || tblock.getState()==State::pending || zblock.getState()==State::pending){
-        return true;
-    }
-    return false;
-}
-
-void Tetris::endPendingTime(){
-    Shape* shape = findShapeInMovement();
-    if (shape->getState() == State::pending){
-        shape->setState(State::in_movement);
-        if (!isPossibleGoDown()){
-            shape->setState(State::stopped);
-            addBlockToCompletedSquare(shape);
-            addShape();
-        }
-    }
-}
-
 bool Tetris::endgame(){
-    if (iblock.getState() == State::stopped && oblock.getState() == State::stopped && lblock.getState()== State::stopped && jblock.getState()== State::stopped && tblock.getState()==State::stopped  && sblock.getState()==State::stopped  && zblock.getState()==State::stopped){
+    if (shape->getState() == State::stopped){
         return true;
     }
     return false;
 }
 
-void Tetris::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-    if (iblock.getState() != State::stopped){
-        iblock.draw(target, states);
-    }
-    else if (oblock.getState() != State::stopped){
-        oblock.draw(target, states);
-    }
-    if (lblock.getState() != State::stopped){
-        lblock.draw(target, states);
-    }
-    if (jblock.getState() != State::stopped){
-        jblock.draw(target, states);
-    }
-    if (tblock.getState() != State::stopped){
-        tblock.draw(target, states);
-    }
-    if (sblock.getState() != State::stopped){
-        sblock.draw(target, states);
-    }
-    if (zblock.getState() != State::stopped){
-        zblock.draw(target, states);
-    }
-    
-    for (std::vector<sf::RectangleShape> column: square_grill){
+void Tetris::draw(sf::RenderTarget& target, sf::RenderStates states)const{
+    for (std::vector<sf::RectangleShape> column: square_grid){
         for (sf::RectangleShape rect : column){
             target.draw(rect, states);
         }
     }
+    shape->draw(target, states);
+    sf::Sprite sprite(vector_texture[static_cast<int>(type_next_shape)]);
+    sprite.setPosition(SIZE_SQUARE, SIZE_SQUARE);
+    target.draw(sprite, states);
 }

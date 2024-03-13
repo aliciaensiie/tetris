@@ -53,7 +53,7 @@ bool Shape::isOnCompleteLine(sf::RectangleShape rect, std::vector<int> complete_
 
 
 //PUBLIC
-Shape::Shape(): vector_square(), way(0), state(State::in_movement){}
+Shape::Shape(): vector_square(), way(Way::South), state(State::in_movement){}
 
 std::vector<sf::RectangleShape> Shape::getVectorSquare()const{
     return vector_square;
@@ -80,23 +80,23 @@ void Shape::goDown(std::vector<std::vector<int>> completed_square){
     for(sf::RectangleShape& square : vector_square){
         square.setPosition(square.getPosition() + sf::Vector2f(0,SIZE_SQUARE));
     }
-    if (isCollision(completed_square) ){
+   /* if (isCollision(completed_square) ){
         state=State::pending;
     }
     for (sf::RectangleShape square : vector_square){
         if (square.getPosition().y<0 || square.getPosition().y > HEIGHT_TETRIS-2*SIZE_SQUARE){
             state=State::pending;
         }
-    } 
+    } */
 }
 
 void Shape::goRight(std::vector<std::vector<int>> completed_square){
     for(sf::RectangleShape& square : vector_square){
         square.setPosition(square.getPosition() + sf::Vector2f(SIZE_SQUARE,0));
     } 
-    if (isCollision(completed_square)){
+    /*if (isCollision(completed_square)){
         state=State::stopped;
-    }  
+    } */ 
 }
 
 
@@ -104,9 +104,9 @@ void Shape::goLeft(std::vector<std::vector<int>> completed_square){
     for(sf::RectangleShape& square : vector_square){
         square.setPosition(square.getPosition() - sf::Vector2f(SIZE_SQUARE,0));
     }
-    if (isCollision(completed_square)){
+    /*if (isCollision(completed_square)){
         state=State::stopped;
-    }  
+    } */ 
 }
 
 void Shape::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -5,7 +5,6 @@
 #define TIME_UPDATE_BLOCK sf::seconds(0.4f)
 #define QUICK_TIME_UPDATE_BLOCK sf::seconds(0.1f)
 #define TIME_UPDATE_SPECIAL_MOVEMENT sf::seconds(0.1f)
-#define TIME_TO_WAIT sf::seconds(0.1f)
 
 int main()
 {
@@ -28,7 +27,6 @@ int main()
     bool press_down = false; 
     bool press_turn = false;
     bool end_game = false;
-    bool do_need_waiting =false;
 
     while (window.isOpen())
     {
@@ -54,53 +52,39 @@ int main()
         }
 
         //turn 
-        if ((clock_special_movement.getElapsedTime()> TIME_UPDATE_SPECIAL_MOVEMENT && end_game == false && do_need_waiting == false) ||(clock_to_move_block.getElapsedTime() > TIME_TO_WAIT && do_need_waiting==true)){
-            
-            if (press_turn == true){
+        if (clock_special_movement.getElapsedTime()> TIME_UPDATE_SPECIAL_MOVEMENT && !end_game ){
+            clock_special_movement.restart();
+            if (press_turn){
                 tetris.turn();
                 press_turn = false;
             }
-            if (press_right==true && tetris.isPossibleGoRight()==true){
+            if (press_right){
                 tetris.goRight();
                 press_right=false;
             }
-            else if (press_left == true && tetris.isPossibleGoLeft()==true){
+            else if (press_left){
                 tetris.goLeft();
                 press_left=false;
-            }
-
-            if (do_need_waiting == false){
-                clock_special_movement.restart();
-            }
-            else {
-                do_need_waiting =false;
-                clock_to_move_block.restart();
-                tetris.endPendingTime();
             }
         }
 
         // go down quickly
-        if (clock_to_move_block.getElapsedTime() > QUICK_TIME_UPDATE_BLOCK && press_down == true && end_game == false && do_need_waiting ==false){
+        if (clock_to_move_block.getElapsedTime() > QUICK_TIME_UPDATE_BLOCK && press_down && !end_game ){
             clock_to_move_block.restart();
             press_down = false;
-            if (tetris.isPossibleGoDown()){
-                tetris.goDown();
-                do_need_waiting=tetris.DoNeedWaiting();
-            }
+            tetris.goDown();
+            
         }
 
         //move
-        if(clock_to_move_block.getElapsedTime() > TIME_UPDATE_BLOCK && end_game == false && do_need_waiting == false){
+        if(clock_to_move_block.getElapsedTime() > TIME_UPDATE_BLOCK && !end_game){
             clock_to_move_block.restart();
-            if (tetris.isPossibleGoDown()){
-                tetris.goDown();
-                do_need_waiting=tetris.DoNeedWaiting();
-            }   
+            tetris.goDown();
             
         }
 
         //complete line
-        tetris.changementLines();
+        tetris.changeLines();
         end_game= tetris.endgame();
 
 

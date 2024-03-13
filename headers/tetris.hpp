@@ -11,34 +11,36 @@
 #include "zBlock.hpp"
 #include <list>
 
+#ifdef PATH_RESSOURCES
+    
+#else
+    #define PATH_RESSOURCES "ressources"
+#endif
+
 #define NUMBER_ELEMENT_TYPE_SHAPE 7
 
 enum class Type_Shape{I, O, L, J, T, S, Z};
 
 class Tetris : public sf::Drawable{
     private: 
-        IBlock iblock;
-        OBlock oblock;
-        LBlock lblock;
-        JBlock jblock;
-        TBlock tblock;
-        SBlock sblock;
-        ZBlock zblock;
-        std::vector<std::vector<sf::RectangleShape>> square_grill;
+        Shape* shape;
+        Shape* nextshape;
+        std::vector<std::vector<sf::RectangleShape>> square_grid; 
         std::vector<std::vector<int>> completed_square;
+        Type_Shape type_next_shape;
+        std::vector<sf::Texture> vector_texture;
 
-        Type_Shape whichTypeShape();
+        Type_Shape randomTypeShape();
         void addShape();
+        void addTextures();
         void addBlockToCompletedSquare(Shape* shape);
-        void addFirstShapes();
 
     public: 
         Tetris(); 
-        Shape* findShapeInMovement();
 
         std::vector<int> completeLines();
         void removeLines(std::vector<int> complete_line);
-        void changementLines();
+        void changeLines();
 
         void goRight();
         void goLeft();
@@ -48,9 +50,6 @@ class Tetris : public sf::Drawable{
         bool isPossibleGoRight();
         bool isPossibleGoLeft();
         bool isPossibleGoDown();
-
-        bool DoNeedWaiting();
-        void endPendingTime();
 
         bool endgame();
 

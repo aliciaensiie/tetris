@@ -9,16 +9,17 @@
 #define NUMBER_SQUARE_HEIGHT HEIGHT_TETRIS/SIZE_SQUARE
 
 enum class State{in_movement, stopped, pending};
+enum class Way{South, West, North, East};
 
 class Shape : public sf::Drawable{
     protected: 
        std::vector<sf::RectangleShape> vector_square;
-       int way;
+       Way way;
        State state;
 
        int random(int number) const;
        sf::Color colorShape() const;
-       virtual std::vector<sf::RectangleShape> createShape(std::vector<sf::RectangleShape> vector_shape, sf::Color color)=0;
+       virtual void createShape(sf::Color color)=0;
        
 
        bool isCollision(std::vector<std::vector<int>> completed_square) const;
@@ -40,12 +41,6 @@ class Shape : public sf::Drawable{
         void goLeft(std::vector<std::vector<int>> completed_square);
 
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        
-        
-        
-        
-        
-
 };
 
 

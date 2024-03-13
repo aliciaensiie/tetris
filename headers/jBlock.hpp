@@ -4,7 +4,7 @@
 
 class JBlock : public Shape{
     private: 
-        std::vector<sf::RectangleShape> createShape(std::vector<sf::RectangleShape> vector_shape, sf::Color color) override;
+        void createShape(sf::Color color) override;
         
         
     public:

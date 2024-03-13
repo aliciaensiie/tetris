@@ -2,31 +2,30 @@
 #include <iostream>
 
 //PRIVATE
-std::vector<sf::RectangleShape> TBlock::createShape(std::vector<sf::RectangleShape> vector_shape, sf::Color color){
+void TBlock::createShape(sf::Color color){ //vector sshpe sert à rien
     for (int i=0; i<4; i++){
         sf::RectangleShape square(sf::Vector2f(SIZE_SQUARE, SIZE_SQUARE));
         square.setFillColor(color);
-        vector_shape.push_back(square);
+        vector_square.push_back(square);
     }
-    vector_shape[0].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE, 0));
-    vector_shape[1].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE - SIZE_SQUARE, 0));
-    vector_shape[2].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE + SIZE_SQUARE, 0));
-    vector_shape[3].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE , SIZE_SQUARE));
-    return vector_shape;
+    vector_square[0].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE, 0));
+    vector_square[1].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE - SIZE_SQUARE, 0));
+    vector_square[2].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE + SIZE_SQUARE, 0));
+    vector_square[3].setPosition(sf::Vector2f((NUMBER_SQUARE_LENGTH/2) * SIZE_SQUARE , SIZE_SQUARE));
      
 }
 
 //PUBLIC
 TBlock::TBlock(): Shape(){
     sf::Color color=colorShape();
-    vector_square = createShape(vector_square, color);
+    createShape(color);
     
 }
 
 void TBlock::turn(std::vector<std::vector<int>> completed_square){
     sf::Vector2f vector = vector_square[0].getPosition();
     sf::Vector2f vector_unit_square = getPositionSquare(vector_square[0]);
-    if (way == 0){
+    if (way == Way::South){
         if (vector_unit_square.x -1 >= 0 && vector_unit_square.y -1 >=0 && vector_unit_square.y +1 < NUMBER_SQUARE_HEIGHT){
 
             if (completed_square[vector_unit_square.x - 1][vector_unit_square.y]==0 
@@ -40,7 +39,7 @@ void TBlock::turn(std::vector<std::vector<int>> completed_square){
         }
         
     }
-    else if (way == 1){
+    else if (way == Way::West){
         if (vector_unit_square.x -1 >= 0 && vector_unit_square.x +1 < NUMBER_SQUARE_LENGTH && vector_unit_square.y -1 >=0){
 
             if (completed_square[vector_unit_square.x - 1][vector_unit_square.y]==0 
@@ -54,7 +53,7 @@ void TBlock::turn(std::vector<std::vector<int>> completed_square){
         }
         
     }
-    else if (way == 2){
+    else if (way == Way::North){
         if (vector_unit_square.x +1 <NUMBER_SQUARE_LENGTH && vector_unit_square.y -1 >=0 && vector_unit_square.y +1 <NUMBER_SQUARE_HEIGHT){
 
             if (completed_square[vector_unit_square.x][vector_unit_square.y+1]==0 
@@ -81,8 +80,5 @@ void TBlock::turn(std::vector<std::vector<int>> completed_square){
                 }
         }
     }
-    if (isCollision(completed_square)){
-        state=State::stopped;
-    }
-    way=(way+1)%4;
+    way=static_cast<Way>( (static_cast<int>(way) + 1) %4) ;
 }
