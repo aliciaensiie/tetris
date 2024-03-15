@@ -23,12 +23,13 @@ enum class Type_Shape{I, O, L, J, T, S, Z};
 
 class Tetris : public sf::Drawable{
     private: 
-        Shape* shape;
-        Shape* nextshape;
+        mutable Shape* shape;
+        mutable Shape* nextshape;
         std::vector<std::vector<sf::RectangleShape>> square_grid; 
         std::vector<std::vector<int>> completed_square;
         Type_Shape type_next_shape;
         std::vector<sf::Texture> vector_texture;
+        int score;
 
         Type_Shape randomTypeShape();
         void addShape();
@@ -37,6 +38,8 @@ class Tetris : public sf::Drawable{
 
     public: 
         Tetris(); 
+
+        int getScore()const;
 
         std::vector<int> completeLines();
         void removeLines(std::vector<int> complete_line);
@@ -51,9 +54,11 @@ class Tetris : public sf::Drawable{
         bool isPossibleGoLeft();
         bool isPossibleGoDown();
 
-        bool endgame();
+        bool endgame()const;
 
         void draw(sf::RenderTarget& target, sf::RenderStates states)const;
+
+        void reset();
 };
 
 

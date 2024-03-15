@@ -137,10 +137,10 @@ void Tetris::addBlockToCompletedSquare(Shape* shape){
 
 //HERE
 Tetris::Tetris():
-shape(), nextshape(), 
+shape(nullptr), nextshape(nullptr), 
 square_grid(NUMBER_SQUARE_LENGTH, std::vector<sf::RectangleShape>(NUMBER_SQUARE_HEIGHT)), 
 completed_square(NUMBER_SQUARE_LENGTH, std::vector<int>(NUMBER_SQUARE_LENGTH, 0)), 
-type_next_shape(), vector_texture() {
+type_next_shape(), vector_texture(), score(0) {
 
     addShape();
     shape = nextshape;
@@ -152,6 +152,10 @@ type_next_shape(), vector_texture() {
             square_grid[i][j].setFillColor(sf::Color::Transparent);
         }
     }
+}
+
+int Tetris::getScore()const{
+    return score;
 }
 
 std::vector<int> Tetris::completeLines(){
@@ -190,10 +194,13 @@ void Tetris::changeLines(){
     if (complete_line.size() != 0){
         removeLines(complete_line);
     }
+    score += complete_line.size()*NUMBER_SQUARE_LENGTH;
 }
 
 
 void Tetris::goRight(){
+    if(!shape)
+        return;
     if(isPossibleGoRight()){
         shape->goRight(completed_square);
     }
@@ -201,24 +208,31 @@ void Tetris::goRight(){
 
 
 void Tetris::goLeft(){
+    if(!shape)
+        return;
     if (isPossibleGoLeft()){
          shape->goLeft(completed_square);
     }
 }
 
 void Tetris::goDown(){
-    if (!isPossibleGoDown()){
+    if (!isPossibleGoDown() && shape){
             shape->setState(State::stopped);
             addBlockToCompletedSquare(shape);
-            shape = nextshape;
+            if(shape != nextshape){
+                delete shape;
+                shape = nextshape;
+            }
             addShape();
         }
-    if(isPossibleGoDown()){
+    if(isPossibleGoDown() && shape){
         shape->goDown(completed_square);
     }
 }
 
 void Tetris::turn(){
+    if(!shape)
+        return;
     shape->turn(completed_square);
 }
 
@@ -226,6 +240,8 @@ void Tetris::turn(){
 
 
 bool Tetris::isPossibleGoRight(){
+    if(!shape)
+        return false;
     if (shape->getState() == State::stopped){
         return false;
     }
@@ -242,6 +258,8 @@ bool Tetris::isPossibleGoRight(){
 
   
 bool Tetris::isPossibleGoLeft(){
+    if(!shape)
+        return false;
     if (shape->getState() == State::stopped){
         return false;
     }
@@ -257,7 +275,7 @@ bool Tetris::isPossibleGoLeft(){
 }
 
 bool Tetris::isPossibleGoDown(){
-    if (shape->getState() == State::in_movement){
+    if (shape && shape->getState() == State::in_movement){
         for(sf::RectangleShape square : shape->getVectorSquare()){
             if (shape->getPositionSquare(square).y>= NUMBER_SQUARE_HEIGHT-1){
                 return false;
@@ -273,8 +291,13 @@ bool Tetris::isPossibleGoDown(){
     }
 }
 
-bool Tetris::endgame(){
+bool Tetris::endgame()const{
+    if(!shape)
+        return true;
     if (shape->getState() == State::stopped){
+        delete shape;
+        shape = nullptr;
+        nextshape = nullptr;
         return true;
     }
     return false;
@@ -286,8 +309,26 @@ void Tetris::draw(sf::RenderTarget& target, sf::RenderStates states)const{
             target.draw(rect, states);
         }
     }
-    shape->draw(target, states);
+    if (shape){
+        target.draw(*shape, states);
+    }
+    
+
+    sf::Font font1;
+    font1.loadFromFile(std::string(PATH_RESSOURCES) + "/fonts/Tetris.ttf");
+    sf::Text text_next_shape("Next Shape : ", font1 );
+    text_next_shape.setFillColor(sf::Color::Black);
+    text_next_shape.setPosition(sf::Vector2f(SIZE_SQUARE/1.6, 1.5*SIZE_SQUARE));
+    text_next_shape.setCharacterSize(18);
+    target.draw(text_next_shape, states);
+
     sf::Sprite sprite(vector_texture[static_cast<int>(type_next_shape)]);
-    sprite.setPosition(SIZE_SQUARE, SIZE_SQUARE);
+    sprite.setPosition(SIZE_SQUARE, 2*SIZE_SQUARE);
     target.draw(sprite, states);
+
+    sf::Text text_score("SCORE: " + std::to_string(score), font1 );
+    text_score.setFillColor(sf::Color::Black);
+    text_score.setPosition(sf::Vector2f(SIZE_SQUARE/1.6, SIZE_SQUARE/4));
+    //text_next_shape.setCharacterSize(25);
+    target.draw(text_score, states);
 }

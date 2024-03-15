@@ -2,7 +2,7 @@ SRCD=src
 HDRD=headers
 OBJD=obj
 
-PROJET_O= zBlock.o sBlock.o tBlock.o jBlock.o lBlock.o oBlock.o iBlock.o shape.o tetris.o main.o
+PROJET_O= zBlock.o sBlock.o tBlock.o jBlock.o lBlock.o oBlock.o iBlock.o shape.o tetris.o  tetrisWindow.o endWindow.o paramWindow.o main.o
 
 COMPILE_OPTIONS=-Wall -g -I"../SFML-2.5.1/include"
 LINKER_OPTIONS=-L"../SFML-2.5.1/lib" -lsfml-graphics -lsfml-window -lsfml-system
@@ -31,11 +31,20 @@ obj/oBlock.o: src/oBlock.cpp headers/oBlock.hpp headers/shape.hpp
 obj/iBlock.o: src/iBlock.cpp headers/iBlock.hpp headers/shape.hpp
 	g++  -o $@ $(COMPILE_OPTIONS) -c src/iBlock.cpp 
 
-obj/shape.o: src/shape.cpp headers/shape.hpp  headers/iBlock.hpp
+obj/shape.o: src/shape.cpp headers/shape.hpp
 	g++ -o $@ $(COMPILE_OPTIONS) -c src/shape.cpp 
 
-obj/tetris.o: src/tetris.cpp headers/tetris.hpp headers/iBlock.hpp headers/shape.hpp
+obj/tetris.o: src/tetris.cpp headers/tetris.hpp headers/shape.hpp
 	g++ -o $@ $(COMPILE_OPTIONS) -c src/tetris.cpp
 
-obj/main.o: src/main.cpp headers/tetris.hpp headers/iBlock.hpp headers/shape.hpp
+obj/tetrisWindow.o: src/tetrisWindow.cpp headers/tetrisWindow.hpp
+	g++ -o $@ $(COMPILE_OPTIONS) -c src/tetrisWindow.cpp
+
+obj/endWindow.o: src/endWindow.cpp headers/endWindow.hpp 
+	g++ -o $@ $(COMPILE_OPTIONS) -c src/endWindow.cpp
+
+obj/paramWindow.o: src/paramWindow.cpp headers/paramWindow.hpp 
+	g++ -o $@ $(COMPILE_OPTIONS) -c src/paramWindow.cpp
+
+obj/main.o: src/main.cpp headers/tetris.hpp headers/tetrisWindow.hpp headers/endWindow.hpp headers/paramWindow.hpp
 	g++ -o $@ $(COMPILE_OPTIONS) -c src/main.cpp
