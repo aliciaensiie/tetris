@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=TETRIS
+Comment=Tetris game
+Exec=/usr/bin/tetris
+Icon=/usr/share/tetris/ressources/textures/icon.jpg
+Terminal=false
+Type=Application
