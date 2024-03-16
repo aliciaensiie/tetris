@@ -65,7 +65,7 @@ set(CPACK_NSIS_CREATE_ICONS_EXTRA
     "CreateShortCut \\\"$DESKTOP\\\\tetris.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tetris.exe\\\" \\\"-foo -bar\\\" "
 )
 #icon windows
-set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/ressources/textures/icon.jpg")
+set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/ressources/textures/icon.ico")
 
 
 #sfml library
